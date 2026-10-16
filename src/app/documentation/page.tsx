@@ -1132,7 +1132,7 @@ function DetailAppSection() {
   return (
     <div className="space-y-8 max-w-4xl">
       <p className="text-sm text-zinc-400">
-        Katalog fitur ELYASR Ops — pakai ini agar tim tahu modul mana untuk tugas apa.
+        Katalog fitur JYF FOOTWEAR — pakai ini agar tim tahu modul mana untuk tugas apa.
         Perhitungan profit & retur: tab <b className="text-zinc-300">FAQ</b>.
       </p>
       <div className="grid sm:grid-cols-2 gap-2 text-xs">
@@ -1191,7 +1191,7 @@ export default function DocumentationPage() {
             Panduan Penggunaan
           </h1>
           <p className="text-sm text-zinc-500 mt-1">
-            Workflow per role · Detail App · FAQ perhitungan — ELYASR Ops
+            Workflow per role · Detail App · FAQ perhitungan — JYF FOOTWEAR
           </p>
         </div>
       </div>
@@ -1422,7 +1422,7 @@ export default function DocumentationPage() {
 
       {/* Footer */}
       <div className="mt-10 pt-6 border-t border-zinc-800 flex items-center justify-between">
-        <p className="text-xs text-zinc-600">ELYASR Management System · Panduan diperbarui 02 Agu 2026 · {userRole === 'OWNER' && <span className="text-emerald-600">✓ Owner Access</span>}</p>
+        <p className="text-xs text-zinc-600">JYF Footwear Management System · Panduan diperbarui 02 Agu 2026 · {userRole === 'OWNER' && <span className="text-emerald-600">✓ Owner Access</span>}</p>
         <div className="flex gap-2">
           {ROLES.map(r => (
             <span key={r.key} className={`text-[10px] font-bold px-2 py-0.5 rounded border ${ROLE_BADGE[r.key]}`}>
