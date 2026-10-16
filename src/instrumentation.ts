@@ -14,6 +14,33 @@ export async function register() {
     // Hanya jalan di Node.js runtime, skip Edge
     if (process.env.NEXT_RUNTIME === 'edge') return
 
+    // ── Bootstrap admin pertama (idempotent) ────────────────
+    // DB fresh tidak punya user sama sekali, dan Dockerfile tidak menjalankan
+    // prisma/seed.ts. Tanpa ini, tidak ada yang bisa login setelah deploy.
+    // Dibuat di sini (bukan di CMD) supaya tetap jalan walau image di-deploy berulang.
+    try {
+        const { prisma } = await import('@/lib/prisma')
+        const bcrypt = (await import('bcryptjs')).default
+        const username = (process.env.ADMIN_USERNAME || 'admin').trim().toLowerCase()
+        const existing = await prisma.appUser.findUnique({ where: { username } })
+        if (!existing) {
+            const password = process.env.ADMIN_PASSWORD || 'admin123'
+            const passwordHash = await bcrypt.hash(password, 12)
+            await prisma.appUser.create({
+                data: {
+                    username,
+                    passwordHash,
+                    userRole: 'OWNER',
+                    fullName: 'Administrator',
+                    isActive: true,
+                },
+            })
+            console.log(`[bootstrap] ✅ Admin user "${username}" dibuat`)
+        }
+    } catch (err) {
+        console.error('[bootstrap] ⚠️  Gagal bootstrap admin:', err)
+    }
+
     try {
         const { todayWIBStr } = await import('@/lib/utils')
         function wibClock(): { today: string; hour: number; minute: number; weekday: string } {

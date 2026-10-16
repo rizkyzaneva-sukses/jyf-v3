@@ -83,6 +83,22 @@ async function main() {
   }
   console.log(`   ✅ ${productCats.length} product categories ensured`)
 
+  // ── 5. Default App Settings (biaya admin platform) ──────
+  // Sebelumnya di-seed oleh migrasi legacy 20260101000004_add_app_settings.
+  // Sekarang di-seed di sini karena migrasi legacy sudah di-squash ke baseline.
+  const defaultSettings = [
+    { key: 'biaya_admin_shopee', value: '14' },
+    { key: 'biaya_admin_tiktok', value: '14.1' },
+  ]
+  for (const s of defaultSettings) {
+    await prisma.appSetting.upsert({
+      where: { key: s.key },
+      update: {},
+      create: { key: s.key, value: s.value },
+    })
+  }
+  console.log(`   ✅ ${defaultSettings.length} app settings ensured`)
+
   console.log('')
   console.log('🎉 Essential seed complete!')
 }
