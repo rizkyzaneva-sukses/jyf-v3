@@ -27,13 +27,26 @@ function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+
+    // Baca nilai dari form (FormData) — tahan terhadap autofill browser/mobile
+    // yang mengisi field tanpa memicu onChange React (state tetap kosong).
+    const formEl = e.currentTarget as HTMLFormElement
+    const fd = new FormData(formEl)
+    const u = ((fd.get('username') as string) || username || '').trim()
+    const p = (fd.get('password') as string) || password || ''
+
+    if (!u || !p) {
+      setError('Username dan password wajib diisi')
+      return
+    }
+
     setLoading(true)
 
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: username.trim(), password }),
+        body: JSON.stringify({ username: u, password: p }),
       })
 
       const data = await res.json()
@@ -81,6 +94,7 @@ function LoginPage() {
               <label className="block text-sm text-zinc-400 mb-1.5">Username</label>
               <input
                 type="text"
+                name="username"
                 value={username}
                 onChange={e => setUsername(e.target.value)}
                 placeholder="Masukkan username"
@@ -96,6 +110,7 @@ function LoginPage() {
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
+                  name="password"
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="Masukkan password"
